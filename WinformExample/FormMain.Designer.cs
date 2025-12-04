@@ -95,7 +95,6 @@
             this.tcMainTab.SelectedIndex = 0;
             this.tcMainTab.Size = new System.Drawing.Size(883, 872);
             this.tcMainTab.TabIndex = 0;
-            this.tcMainTab.SelectedIndexChanged += new System.EventHandler(this.tcMainTab_SelectedIndexChanged);
             // 
             // FormMain
             // 
@@ -105,9 +104,6 @@
             this.Controls.Add(this.tcMainTab);
             this.Name = "FormMain";
             this.Text = "FormMain";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMain_FormClosed);
-            this.Load += new System.EventHandler(this.FormMain_Load);
             this.tcMainTab.ResumeLayout(false);
             this.ResumeLayout(false);
 

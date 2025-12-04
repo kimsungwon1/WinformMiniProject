@@ -27,6 +27,7 @@ namespace WinformExample
             this.btnCalculateBMI.Click += new System.EventHandler(this.btnCalculateBMI_Click);
             this.tbHeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbHeight_KeyPress);
             this.tbWeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbWeight_KeyPress);
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
         }
 
         public string TextTbWeight

@@ -38,6 +38,7 @@ namespace WinformExample
             this.cbBoldCheck.CheckedChanged += new System.EventHandler(this.boldCheck_CheckedChanged);
             this.cbxFontCombo.SelectedIndexChanged += new System.EventHandler(this.cbxFontCombo_SelectedIndexChanged);
             this.Load += new System.EventHandler(this.load);
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
         }
 
         private cModelOfFontSetter model;

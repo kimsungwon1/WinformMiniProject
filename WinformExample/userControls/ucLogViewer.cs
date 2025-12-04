@@ -29,6 +29,7 @@ namespace WinformExample
             this.btnAddFilter.Click += new System.EventHandler(this.btnAddFilter_Click);
             this.btnDeleteFilter.Click += new System.EventHandler(this.btnDeleteFilter_Click);
             this.tbFilterInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbFilter_KeyPress);
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
         }
 
         private cModelOfLogViewer model;

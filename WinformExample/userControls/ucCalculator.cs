@@ -66,6 +66,7 @@ namespace WinformExample
             this.btnClear.Enter += this.btn_Enter;
             this.tbBackground.KeyPress += this.tbBackground_KeyPress;
             this.Enter += this.ucCalculator_Enter;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
         }
         public void SaveData(string sPathToSave)
         {

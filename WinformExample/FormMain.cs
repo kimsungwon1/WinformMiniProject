@@ -30,6 +30,15 @@ namespace WinformExample
             dicTabs = new Dictionary<eTabType, iPresenter>();
 
             initializeControls();
+            initializeEvents();
+        }
+
+        private void initializeEvents()
+        {
+            this.tcMainTab.SelectedIndexChanged += new System.EventHandler(this.tcMainTab_SelectedIndexChanged);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMain_FormClosed);
+            this.Load += new System.EventHandler(this.FormMain_Load);
         }
 
         private iPresenter getTab(eTabType eType)
