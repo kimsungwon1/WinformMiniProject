@@ -145,5 +145,10 @@ namespace WinformExample
             keyPress_MainOperation(sender, e);
             e.Handled = true;
         }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveData("../../Save/Calculator.txt");
+        }
     }
 }

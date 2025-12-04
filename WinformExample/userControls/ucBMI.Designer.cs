@@ -44,6 +44,7 @@
             this.lbWeight = new System.Windows.Forms.Label();
             this.tbHeight = new System.Windows.Forms.TextBox();
             this.lbHeight = new System.Windows.Forms.Label();
+            this.btnSave = new System.Windows.Forms.Button();
             this.gbResult.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBMI)).BeginInit();
             this.gbHeightWeightInput.SuspendLayout();
@@ -62,7 +63,7 @@
             this.gbResult.Controls.Add(this.lbLowWeight);
             this.gbResult.Location = new System.Drawing.Point(3, 123);
             this.gbResult.Name = "gbResult";
-            this.gbResult.Size = new System.Drawing.Size(680, 157);
+            this.gbResult.Size = new System.Drawing.Size(680, 220);
             this.gbResult.TabIndex = 3;
             this.gbResult.TabStop = false;
             this.gbResult.Text = "결과";
@@ -211,14 +212,25 @@
             this.lbHeight.TabIndex = 0;
             this.lbHeight.Text = "신장(cm)";
             // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(593, 360);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 47);
+            this.btnSave.TabIndex = 5;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // ucBMI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.gbResult);
             this.Controls.Add(this.gbHeightWeightInput);
             this.Name = "ucBMI";
-            this.Size = new System.Drawing.Size(691, 358);
+            this.Size = new System.Drawing.Size(691, 496);
             this.gbResult.ResumeLayout(false);
             this.gbResult.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBMI)).EndInit();
@@ -246,5 +258,6 @@
         private System.Windows.Forms.TextBox tbHeight;
         private System.Windows.Forms.Label lbHeight;
         private System.Windows.Forms.Label lbHeavyWeight;
+        private System.Windows.Forms.Button btnSave;
     }
 }

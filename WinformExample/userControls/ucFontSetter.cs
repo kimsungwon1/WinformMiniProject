@@ -326,5 +326,10 @@ namespace WinformExample
         {
             btnDeleteNodeClick(sender, e);
         }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveData("../../Save/FontSetter.txt");
+        }
     }
 }

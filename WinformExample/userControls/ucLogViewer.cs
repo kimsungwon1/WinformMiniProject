@@ -155,5 +155,10 @@ namespace WinformExample
         {
             model.LoadData(sPathToLoad);
         }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveData("../../Save/LogViewer.txt");
+        }
     }
 }

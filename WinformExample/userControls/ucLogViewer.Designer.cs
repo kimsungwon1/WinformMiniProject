@@ -39,6 +39,7 @@
             this.tbFilterInput = new System.Windows.Forms.TextBox();
             this.btnAddFilter = new System.Windows.Forms.Button();
             this.btnDeleteFilter = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher)).BeginInit();
             this.SuspendLayout();
             // 
@@ -144,10 +145,21 @@
             this.btnDeleteFilter.Text = "삭제";
             this.btnDeleteFilter.UseVisualStyleBackColor = true;
             // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(612, 695);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 47);
+            this.btnSave.TabIndex = 9;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // ucLogViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnDeleteFilter);
             this.Controls.Add(this.btnAddFilter);
             this.Controls.Add(this.tbFilterInput);
@@ -178,5 +190,6 @@
         private System.Windows.Forms.Button btnDeleteFilter;
         private System.Windows.Forms.Button btnAddFilter;
         private System.Windows.Forms.ColumnHeader columnHeader;
+        private System.Windows.Forms.Button btnSave;
     }
 }

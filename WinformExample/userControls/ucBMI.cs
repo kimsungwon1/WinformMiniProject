@@ -110,5 +110,10 @@ namespace WinformExample
                 e.Handled = true;
             }
         }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveData("../../Save/BMI.txt");
+        }
     }
 }

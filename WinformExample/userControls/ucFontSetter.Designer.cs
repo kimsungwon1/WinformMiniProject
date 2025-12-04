@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.gbTreeListView = new System.Windows.Forms.GroupBox();
+            this.btnDeleteNode = new System.Windows.Forms.Button();
             this.btnAddChild = new System.Windows.Forms.Button();
             this.btnAddRoot = new System.Windows.Forms.Button();
             this.lvNodes = new System.Windows.Forms.ListView();
@@ -46,7 +47,7 @@
             this.cbBoldCheck = new System.Windows.Forms.CheckBox();
             this.cbxFontCombo = new System.Windows.Forms.ComboBox();
             this.lbFont = new System.Windows.Forms.Label();
-            this.btnDeleteNode = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             this.gbTreeListView.SuspendLayout();
             this.gbModalModaless.SuspendLayout();
             this.gbProgress.SuspendLayout();
@@ -67,6 +68,15 @@
             this.gbTreeListView.TabIndex = 7;
             this.gbTreeListView.TabStop = false;
             this.gbTreeListView.Text = "TreeView & ListView";
+            // 
+            // btnDeleteNode
+            // 
+            this.btnDeleteNode.Location = new System.Drawing.Point(300, 234);
+            this.btnDeleteNode.Name = "btnDeleteNode";
+            this.btnDeleteNode.Size = new System.Drawing.Size(140, 38);
+            this.btnDeleteNode.TabIndex = 4;
+            this.btnDeleteNode.Text = "Delete Node";
+            this.btnDeleteNode.UseVisualStyleBackColor = true;
             // 
             // btnAddChild
             // 
@@ -232,19 +242,21 @@
             this.lbFont.TabIndex = 0;
             this.lbFont.Text = "Font : ";
             // 
-            // btnDeleteNode
+            // btnSave
             // 
-            this.btnDeleteNode.Location = new System.Drawing.Point(300, 234);
-            this.btnDeleteNode.Name = "btnDeleteNode";
-            this.btnDeleteNode.Size = new System.Drawing.Size(140, 38);
-            this.btnDeleteNode.TabIndex = 4;
-            this.btnDeleteNode.Text = "Delete Node";
-            this.btnDeleteNode.UseVisualStyleBackColor = true;
+            this.btnSave.Location = new System.Drawing.Point(606, 676);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 47);
+            this.btnSave.TabIndex = 7;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // ucFontSetter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.gbTreeListView);
             this.Controls.Add(this.gbModalModaless);
             this.Controls.Add(this.gbProgress);
@@ -283,5 +295,6 @@
         private System.Windows.Forms.Label lbFont;
         private System.Windows.Forms.ProgressBar pgbarTest;
         private System.Windows.Forms.Button btnDeleteNode;
+        private System.Windows.Forms.Button btnSave;
     }
 }
