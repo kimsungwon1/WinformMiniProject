@@ -25,12 +25,19 @@ namespace WinformExample
 
         public FormMain()
         {
-            InitializeComponent();
-            
-            m_dicTabs = new Dictionary<eTabType, iPresenter>();
+            try
+            {
+                InitializeComponent();
 
-            InitializeControls();
-            EventInitialize();
+                m_dicTabs = new Dictionary<eTabType, iPresenter>();
+
+                InitializeControls();
+                EventInitialize();
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void EventInitialize()
@@ -40,7 +47,7 @@ namespace WinformExample
             this.Load += new System.EventHandler(this.FormMain_Load);
         }
 
-        private iPresenter GetTab(eTabType eType)
+        private iPresenter GetTabPresenter(eTabType eType)
         {
             switch(eType)
             {
@@ -81,7 +88,7 @@ namespace WinformExample
         {
             foreach(eTabType eType in Enum.GetValues(typeof(eTabType)))
             {
-                iPresenter iTab = GetTab(eType);
+                iPresenter iTab = GetTabPresenter(eType);
                 m_dicTabs.Add(eType, iTab);
 
                 Control control = iTab as Control;

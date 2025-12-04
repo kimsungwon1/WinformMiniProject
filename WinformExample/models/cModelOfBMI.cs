@@ -14,8 +14,15 @@ namespace WinformExample
 
         public cModelOfBMI(iBMIPresenter presenter)
         {
-            m_BMIPresenter = presenter;
-            m_BMIPresenter.btnCalculateClick += calculate;
+            try
+            {
+                m_BMIPresenter = presenter;
+                m_BMIPresenter.btnCalculateClick += calculate;
+            }
+            catch(Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         public void SaveData(string sPathToSave)
         {

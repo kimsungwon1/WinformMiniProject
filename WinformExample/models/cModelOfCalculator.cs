@@ -34,13 +34,20 @@ namespace WinformExample
 
         public cModelOfCalculator(iCalculatorPresenter inter)
         {
-            m_eCalculatorState = eCalculatorState.FirstDigitTyping;
-            m_dFirstOperand = 0.0;
-            m_dSecondOperand = 0.0;
-            this.m_CalculatorPresenter = inter;
-            inter.btnClick_MainOperation += ClickBtn;
-            inter.keyPress_MainOperation += KeyPress;
-            inter.SetFocusToControl();
+            try
+            {
+                m_eCalculatorState = eCalculatorState.FirstDigitTyping;
+                m_dFirstOperand = 0.0;
+                m_dSecondOperand = 0.0;
+                this.m_CalculatorPresenter = inter;
+                inter.btnClick_MainOperation += ClickBtn;
+                inter.keyPress_MainOperation += KeyPress;
+                inter.SetFocusToControl();
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         public void SaveData(string sPathToSave)
@@ -257,17 +264,18 @@ namespace WinformExample
                         return false;
                     }
                 }
+                return true;
             }
             catch (Exception exception)
             {
                 cLogger.Instance.AddLog(eLogType.ERROR, exception);
+                return false;
             }
-            return true;
         }
 
-        private bool IsCalculator(char key)
+        private bool IsCalculator(char cKey)
         {
-            return key == '*' || key == '-' || key == '+' || key == '%' || key == '/';
+            return cKey == '*' || cKey == '-' || cKey == '+' || cKey == '%' || cKey == '/';
         }
 
         private bool IsInsertingPointPossible()

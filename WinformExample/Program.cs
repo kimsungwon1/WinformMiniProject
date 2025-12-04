@@ -16,16 +16,8 @@ namespace WinformExample
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            try
-            {
-                Application.Run(new FormMain());
-            }
-            catch(NullReferenceException e)
-            {
-                MessageBox.Show(e.Message);
-                Application.Restart();
-            }
+            
+            Application.Run(new FormMain());
         }
     }
 }

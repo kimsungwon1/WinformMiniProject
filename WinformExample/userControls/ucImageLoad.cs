@@ -18,9 +18,16 @@ namespace WinformExample
     {
         public ucImageLoad()
         {
-            InitializeComponent();
-            EventInitialize();
-            m_modelOfImageLoader = new cModelOfImageLoader(this);
+            try
+            {
+                InitializeComponent();
+                EventInitialize();
+                m_modelOfImageLoader = new cModelOfImageLoader(this);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         private void EventInitialize()
         {
@@ -48,20 +55,36 @@ namespace WinformExample
 
         private void btnImageLoad_Click(object sender, EventArgs e)
         {
-            if(btnImageLoadClick == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "ImageLoad - Image Loading Button Event is null");
-                throw new NullReferenceException("ImageLoad - Image Loading Button Event is null");
+                btnImageLoadClick(sender, e);
             }
-            btnImageLoadClick(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         public void SaveData(string sPathToSave)
         {
-            m_modelOfImageLoader.SaveData(sPathToSave);
+            try
+            {
+                m_modelOfImageLoader.SaveData(sPathToSave);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         public void LoadData(string sPathToLoad)
         {
-            m_modelOfImageLoader.LoadData(sPathToLoad);
+            try
+            {
+                m_modelOfImageLoader.LoadData(sPathToLoad);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
     }
 }

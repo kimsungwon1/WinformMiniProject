@@ -18,8 +18,15 @@ namespace WinformExample
         private iImageLoadPresenter m_ImageLoadPresenter;
         public cModelOfImageLoader(iImageLoadPresenter presenter)
         {
-            m_ImageLoadPresenter = presenter;
-            m_ImageLoadPresenter.btnImageLoadClick += BtnImageLoad_Click;
+            try
+            {
+                m_ImageLoadPresenter = presenter;
+                m_ImageLoadPresenter.btnImageLoadClick += BtnImageLoad_Click;
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void BtnImageLoad_Click(object sender, EventArgs e)

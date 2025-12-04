@@ -16,11 +16,18 @@ namespace WinformExample
         private List<string> m_sListLines = new List<string>(); // 모든 로그의 줄
         public cModelOfLogViewer(iLogViewerPresenter presenter)
         {
-            m_LogViewerPresenter = presenter;
-            m_LogViewerPresenter.fileSystemWatcherChanged += FileSystemWatcher_Changed;
-            m_LogViewerPresenter.btnAddFilterClick += BtnAddFilter_Click;
-            m_LogViewerPresenter.btnDeleteFilterClick += BtnDeleteFilter_Click;
-            m_LogViewerPresenter.btnOpenFileClick += BtnOpenFile_Click;
+            try
+            {
+                m_LogViewerPresenter = presenter;
+                m_LogViewerPresenter.fileSystemWatcherChanged += FileSystemWatcher_Changed;
+                m_LogViewerPresenter.btnAddFilterClick += BtnAddFilter_Click;
+                m_LogViewerPresenter.btnDeleteFilterClick += BtnDeleteFilter_Click;
+                m_LogViewerPresenter.btnOpenFileClick += BtnOpenFile_Click;
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         public void SaveData(string sPathToSave)
@@ -32,9 +39,9 @@ namespace WinformExample
                 {
                     int nFilterCount = m_LogViewerPresenter.FiltersItemsOfListView.Count;
                     writer.Write(nFilterCount);
-                    foreach(ListViewItem filter in m_LogViewerPresenter.FiltersItemsOfListView)
+                    foreach(ListViewItem filterItem in m_LogViewerPresenter.FiltersItemsOfListView)
                     {
-                        writer.Write(filter.Text);
+                        writer.Write(filterItem.Text);
                     }
                 }
 

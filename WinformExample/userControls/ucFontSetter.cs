@@ -15,14 +15,21 @@ namespace WinformExample
     {
         public ucFontSetter()
         {
-            InitializeComponent();
-            EventInitialize();
+            try
+            {
+                InitializeComponent();
+                EventInitialize();
 
-            ColumnHeader header = new ColumnHeader();
-            header.Width = lvNodes.ClientSize.Width - SystemInformation.VerticalScrollBarWidth;
-            lvNodes.Columns.Add(header);
+                ColumnHeader header = new ColumnHeader();
+                header.Width = lvNodes.ClientSize.Width - SystemInformation.VerticalScrollBarWidth;
+                lvNodes.Columns.Add(header);
 
-            m_ModelOfFontSetter = new cModelOfFontSetter(this);
+                m_ModelOfFontSetter = new cModelOfFontSetter(this);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void EventInitialize()
@@ -181,155 +188,236 @@ namespace WinformExample
 
         public void AddComboItem(string str)
         {
-            cbxFontCombo.Items.Add(str);
+            try
+            {
+                cbxFontCombo.Items.Add(str);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         public void AddLvNode(string sNodeText)
         {
-            ListViewItem newItem = new ListViewItem(sNodeText);
-            lvNodes.Items.Add(newItem);
+            try
+            {
+                ListViewItem newItem = new ListViewItem(sNodeText);
+                lvNodes.Items.Add(newItem);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         public void AddTncTreeNode(string sNodeText)
         {
-            tvNodes.Nodes.Add(sNodeText, sNodeText);
+            try
+            {
+                tvNodes.Nodes.Add(sNodeText, sNodeText);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         public TreeNode GetTreeNodeByString(string sNodeText)
         {
-            TreeNode[] found = TreeNodes_All.Find(sNodeText, true);
-            if(found.Count() == 0)
+            try
             {
-                return null;
+                TreeNode[] found = TreeNodes_All.Find(sNodeText, true);
+                if (found.Count() == 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    return found[0];
+                }
             }
-            else
+            catch (Exception exception)
             {
-                return found[0];
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+                return null;
             }
         }
         public void ClearLvNode()
         {
-            lvNodes.Clear();
+            try
+            {
+                lvNodes.Clear();
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         // 초기화 로드
         private void Load_Initialize(object sender, EventArgs e)
         {
-            if(initializeLoad == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "FontSetter - Initialize event is null");
-                throw new NullReferenceException("FontSetter - Initialize event is null");
+                initializeLoad(sender, e);
             }
-            
-            initializeLoad(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         // 볼드체 체크
         private void boldCheck_CheckedChanged(object sender, EventArgs e)
         {
-            if (boldCheck__CheckedChanged == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "FontSetter - Bold Checkbox Change Event is null");
-                throw new NullReferenceException("FontSetter - Bold Checkbox Change Event is null");
+                boldCheck__CheckedChanged(sender, e);
             }
-
-            boldCheck__CheckedChanged(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         // 이탤릭체 체크
         private void italicCheck_CheckedChanged(object sender, EventArgs e)
         {
-            if (italicCheck__CheckedChanged == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "FontSetter - Italic Checkbox Change Event is null");
-                throw new NullReferenceException("FontSetter - Italic Checkbox Change Event is null");
+                italicCheck__CheckedChanged(sender, e);
             }
-
-            italicCheck__CheckedChanged(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void btnAddRoot_Click(object sender, EventArgs e)
         {
-            if (btnAddRootClick == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "FontSetter - Root Node Add Button Event is null");
-                throw new NullReferenceException("FontSetter - Root Node Add Button Event is null");
+                btnAddRootClick(sender, e);
             }
-
-            btnAddRootClick(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         private void btnAddChild_Click(object sender, EventArgs e)
         {
-            if (btnAddChildClick == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "FontSetter - Child Node Add Button Event is null");
+                btnAddChildClick(sender, e);
             }
-
-            btnAddChildClick(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void cbxFontCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (selectedFontChanged == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "FontSetter - Font Change Event is null");
-                throw new NullReferenceException("FontSetter - Font Change Event is null");
+                selectedFontChanged(sender, e);
             }
-
-            selectedFontChanged(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void tkBarTest_Scroll(object sender, EventArgs e)
         {
-            if(tkBarTestScroll == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "FontSetter - Trackbar Scroll Event is null");
-                throw new NullReferenceException("FontSetter - Trackbar Scroll Event is null");
+                tkBarTestScroll(sender, e);
             }
-
-            tkBarTestScroll(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void btnModal_Click(object sender, EventArgs e)
         {
-            if(btnModalClick == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "FontSetter - Modal Generate Button Event is null");
-                throw new NullReferenceException("FontSetter - Modal Generate Button Event is null");
+                btnModalClick(sender, e);
             }
-
-            btnModalClick(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void btnModaless_Click(object sender, EventArgs e)
         {
-            if (btnModalessClick == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "FontSetter - Modaless Generate Button Event is null");
-                throw new NullReferenceException("FontSetter - Modaless Generate Button Event is null");
+                btnModalessClick(sender, e);
             }
-
-            btnModalessClick(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void btnMessageBox_Click(object sender, EventArgs e)
         {
-            cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Button Clicked : MessageBox UI");
-            MessageBox.Show(tbFontTest.Text, "MessageBox Text", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            try
+            {
+                cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Button Clicked : MessageBox UI");
+                MessageBox.Show(tbFontTest.Text, "MessageBox Text", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         public void SaveData(string sPathToSave)
         {
-            m_ModelOfFontSetter.SaveData(sPathToSave);
+            try
+            {
+                m_ModelOfFontSetter.SaveData(sPathToSave);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         public void LoadData(string sPathToLoad)
         {
-            m_ModelOfFontSetter.LoadData(sPathToLoad);
+            try
+            {
+                m_ModelOfFontSetter.LoadData(sPathToLoad);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void btnDeleteNode_Click(object sender, EventArgs e)
         {
-            btnDeleteNodeClick(sender, e);
+            try
+            {
+                btnDeleteNodeClick(sender, e);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SaveData("../../Save/FontSetter.txt");
+            try
+            {
+                SaveData("../../Save/FontSetter.txt");
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
     }
 }

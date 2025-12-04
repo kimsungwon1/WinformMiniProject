@@ -19,9 +19,16 @@ namespace WinformExample
 
         public ucCalculator()
         {
-            InitializeComponent();
-            EventInitialize();
-            m_modelOfCalculator = new cModelOfCalculator(this);
+            try
+            {
+                InitializeComponent();
+                EventInitialize();
+                m_modelOfCalculator = new cModelOfCalculator(this);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void EventInitialize()
@@ -70,11 +77,25 @@ namespace WinformExample
         }
         public void SaveData(string sPathToSave)
         {
-            m_modelOfCalculator.SaveData(sPathToSave);
+            try
+            {
+                m_modelOfCalculator.SaveData(sPathToSave);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         public void LoadData(string sPathToLoad)
         {
-            m_modelOfCalculator.LoadData(sPathToLoad);
+            try
+            {
+                m_modelOfCalculator.LoadData(sPathToLoad);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         public string TextMainOperation
         {
@@ -110,46 +131,76 @@ namespace WinformExample
         }
         public void SetFocusToControl()
         {
-            tbBackground.Focus();
+            try
+            {
+                tbBackground.Focus();
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         private void ucCalculator_Enter(object sender, EventArgs e)
         {
-            tbBackground.Focus();
+            try
+            {
+                tbBackground.Focus();
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void btnCalBtn_Click(object sender, EventArgs e)
         {
-            Button btnSender = (Button)sender;
-            if(btnClick_MainOperation == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "Calculator - Calculate Button Event is null");
-                throw new NullReferenceException("Calculator - Calculate Button Event is null");
-            }
+                Button btnSender = (Button)sender;
 
-            btnClick_MainOperation(sender, e);
+                btnClick_MainOperation(sender, e);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         
         private void btn_Enter(object sender, EventArgs e)
         {
-            Button senderButton = (Button)sender;
-            tbBackground.Focus();
+            try
+            {
+                tbBackground.Focus();
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void tbBackground_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (btnClick_MainOperation == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "Calculator - Key Input Event is null");
-                throw new NullReferenceException("Calculator - Key Input Event is null");
+                keyPress_MainOperation(sender, e);
+                e.Handled = true;
             }
-
-            keyPress_MainOperation(sender, e);
-            e.Handled = true;
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SaveData("../../Save/Calculator.txt");
+            try
+            {
+                SaveData("../../Save/Calculator.txt");
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
     }
 }

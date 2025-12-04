@@ -17,19 +17,26 @@ namespace WinformExample
 
         public cModelOfFontSetter(iFontSettterPresenter presenter)
         {
-            m_FontSetterPresenter = presenter;
-            randomNodeID = new Random();
+            try
+            {
+                m_FontSetterPresenter = presenter;
+                randomNodeID = new Random();
 
-            m_FontSetterPresenter.initializeLoad += LoadInitialize;
-            m_FontSetterPresenter.boldCheck__CheckedChanged += BoldCheck_CheckedChanged;
-            m_FontSetterPresenter.btnAddChildClick += BtnAddChild_Click;
-            m_FontSetterPresenter.btnAddRootClick += BtnAddRoot_Click;
-            m_FontSetterPresenter.btnDeleteNodeClick += BtnDeleteNode_Click;
-            m_FontSetterPresenter.btnModalClick += BtnModal_Click;
-            m_FontSetterPresenter.btnModalessClick += BtnModaless_Click;
-            m_FontSetterPresenter.italicCheck__CheckedChanged += ItalicCheck_CheckedChanged;
-            m_FontSetterPresenter.selectedFontChanged += SelectFontCombo;
-            m_FontSetterPresenter.tkBarTestScroll += TkBarTest_Scroll;
+                m_FontSetterPresenter.initializeLoad += LoadInitialize;
+                m_FontSetterPresenter.boldCheck__CheckedChanged += BoldCheck_CheckedChanged;
+                m_FontSetterPresenter.btnAddChildClick += BtnAddChild_Click;
+                m_FontSetterPresenter.btnAddRootClick += BtnAddRoot_Click;
+                m_FontSetterPresenter.btnDeleteNodeClick += BtnDeleteNode_Click;
+                m_FontSetterPresenter.btnModalClick += BtnModal_Click;
+                m_FontSetterPresenter.btnModalessClick += BtnModaless_Click;
+                m_FontSetterPresenter.italicCheck__CheckedChanged += ItalicCheck_CheckedChanged;
+                m_FontSetterPresenter.selectedFontChanged += SelectFontCombo;
+                m_FontSetterPresenter.tkBarTestScroll += TkBarTest_Scroll;
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         public void SaveData(string sPathToSave)
@@ -287,7 +294,7 @@ namespace WinformExample
                 SendLogWithDeletingNodes(childNode);
             }
 
-            cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Tree Node <{node.Text}> deleted");
+            cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Tree Node \"{node.Text}\" deleted");
         }
 
         private void BtnDeleteNode_Click(object sender, EventArgs e)

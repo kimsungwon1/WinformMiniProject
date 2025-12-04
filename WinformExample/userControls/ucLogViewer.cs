@@ -15,9 +15,16 @@ namespace WinformExample
     {
         public ucLogViewer()
         {
-            InitializeComponent();
-            EventInitialize();
-            m_modelOfLogViewer = new cModelOfLogViewer(this);
+            try
+            {
+                InitializeComponent();
+                EventInitialize();
+                m_modelOfLogViewer = new cModelOfLogViewer(this);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void EventInitialize()
@@ -88,77 +95,112 @@ namespace WinformExample
         // fileSystemWatcher가 해당 파일이 발견됬는지 확인
         private void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
-            if (fileSystemWatcherChanged == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "LogViewer - FileSystem Change Event is null");
-                throw new NullReferenceException("LogViewer - FileSystem Change Event is null");
+                fileSystemWatcherChanged(sender, e);
             }
-            fileSystemWatcherChanged(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
-            if (btnOpenFileClick == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "LogViewer - File Open Button Event is null");
-                throw new NullReferenceException("LogViewer - File Button Event is null");
+                btnOpenFileClick(sender, e);
             }
-
-            btnOpenFileClick(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void btnAddFilter_Click(object sender, EventArgs e)
         {
-            if (btnAddFilterClick == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "LogViewer - Filter Add Button Event is null");
-                throw new NullReferenceException("LogViewer - Filter Add Button Event is null");
+                btnAddFilterClick(sender, e);
             }
-
-            btnAddFilterClick(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void btnDeleteFilter_Click(object sender, EventArgs e)
         {
-            if (btnDeleteFilterClick == null)
+            try
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, "LogViewer - Filter Delete Button Event is null");
-                throw new NullReferenceException("LogViewer - Filter Delete Button Event is null");
+                btnDeleteFilterClick(sender, e);
             }
-
-            btnDeleteFilterClick(sender, e);
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void tbMain_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = true;
+            try
+            {
+                e.Handled = true;
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void tbFilter_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(e.KeyChar == '\r')
+            try
             {
-                if (btnAddFilterClick == null)
+                if (e.KeyChar == '\r')
                 {
-                    cLogger.Instance.AddLog(eLogType.ERROR, "LogViewer - Filter Add Button Event is null");
-                    throw new NullReferenceException("LogViewer - Filter Add Button Event is null");
+                    btnAddFilterClick(sender, e);
+                    e.Handled = true;
                 }
-                btnAddFilterClick(sender, e);
-                e.Handled = true;
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
         public void SaveData(string sPathToSave)
         {
-            m_modelOfLogViewer.SaveData(sPathToSave);
+            try
+            {
+                m_modelOfLogViewer.SaveData(sPathToSave);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         public void LoadData(string sPathToLoad)
         {
-            m_modelOfLogViewer.LoadData(sPathToLoad);
+            try
+            {
+                m_modelOfLogViewer.LoadData(sPathToLoad);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SaveData("../../Save/LogViewer.txt");
+            try
+            {
+                SaveData("../../Save/LogViewer.txt");
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
     }
 }

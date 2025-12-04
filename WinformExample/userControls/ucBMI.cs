@@ -17,9 +17,16 @@ namespace WinformExample
         public event EventHandler btnCalculateClick;
         public ucBMI()
         {
-            InitializeComponent();
-            EventInitialize();
-            m_modelOfBMI = new cModelOfBMI(this);
+            try
+            {
+                InitializeComponent();
+                EventInitialize();
+                m_modelOfBMI = new cModelOfBMI(this);
+            }
+            catch(Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void EventInitialize()
@@ -80,41 +87,79 @@ namespace WinformExample
         
         private void btnCalculateBMI_Click(object sender, EventArgs e)
         {
-            if(btnCalculateClick == null)
+            try
             {
-                throw new NullReferenceException("BMI - Calculate Button event is null");
+                btnCalculateClick(sender, e);
             }
-            btnCalculateClick(sender, e);
+            catch(Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         public void SaveData(string sPathToSave)
         {
-            m_modelOfBMI.SaveData(sPathToSave);
+            try
+            {
+                m_modelOfBMI.SaveData(sPathToSave);
+            }
+            catch(Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
         public void LoadData(string sPathToLoad)
         {
-            m_modelOfBMI.LoadData(sPathToLoad);
+            try
+            {
+                m_modelOfBMI.LoadData(sPathToLoad);
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
 
         private void tbHeight_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '\b')
+            try
             {
-                e.Handled = true;
+                if (!char.IsDigit(e.KeyChar) && e.KeyChar != '\b')
+                {
+                    e.Handled = true;
+                }
+            }
+            catch(Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
         private void tbWeight_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '\b')
+            try
             {
-                e.Handled = true;
+                if (!char.IsDigit(e.KeyChar) && e.KeyChar != '\b')
+                {
+                    e.Handled = true;
+                }
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SaveData("../../Save/BMI.txt");
+            try
+            {
+                SaveData("../../Save/BMI.txt");
+            }
+            catch (Exception exception)
+            {
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
+            }
         }
     }
 }
