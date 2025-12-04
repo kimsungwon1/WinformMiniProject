@@ -10,17 +10,17 @@ namespace WinformExample
 {
     public class cModelOfLogViewer
     {
-        private iLogViewerPresenter inter;
+        private iLogViewerPresenter m_LogViewerPresenter;
 
         private string m_sFullPath; // 현재 파일의 절대경로
         private List<string> m_sListLines = new List<string>(); // 모든 로그의 줄
         public cModelOfLogViewer(iLogViewerPresenter presenter)
         {
-            inter = presenter;
-            inter.fileSystemWatcherChanged += fileSystemWatcher_Changed;
-            inter.btnAddFilterClick += btnAddFilter_Click;
-            inter.btnDeleteFilterClick += btnDeleteFilter_Click;
-            inter.btnOpenFileClick += btnOpenFile_Click;
+            m_LogViewerPresenter = presenter;
+            m_LogViewerPresenter.fileSystemWatcherChanged += FileSystemWatcher_Changed;
+            m_LogViewerPresenter.btnAddFilterClick += BtnAddFilter_Click;
+            m_LogViewerPresenter.btnDeleteFilterClick += BtnDeleteFilter_Click;
+            m_LogViewerPresenter.btnOpenFileClick += BtnOpenFile_Click;
         }
 
         public void SaveData(string sPathToSave)
@@ -30,9 +30,9 @@ namespace WinformExample
                 Stream stream = new FileStream(sPathToSave, FileMode.OpenOrCreate);
                 using (BinaryWriter writer = new BinaryWriter(stream))
                 {
-                    int nFilterCount = inter.FiltersItemsOfListView.Count;
+                    int nFilterCount = m_LogViewerPresenter.FiltersItemsOfListView.Count;
                     writer.Write(nFilterCount);
-                    foreach(ListViewItem filter in inter.FiltersItemsOfListView)
+                    foreach(ListViewItem filter in m_LogViewerPresenter.FiltersItemsOfListView)
                     {
                         writer.Write(filter.Text);
                     }
@@ -42,7 +42,7 @@ namespace WinformExample
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
         public void LoadData(string sPathToLoad)
@@ -56,26 +56,26 @@ namespace WinformExample
                     for(int i = 0; i < nFilterCount; i++)
                     {
                         string sNewFilter = reader.ReadString();
-                        inter.FiltersItemsOfListView.Add(sNewFilter);
+                        m_LogViewerPresenter.FiltersItemsOfListView.Add(sNewFilter);
                     }
                 }
                 // 로그 오픈
-                openLog("..\\..\\app.log");
+                OpenLog("..\\..\\app.log");
                 cLogger.Instance.AddLog(eLogType.SYSTEM, $"LogViewer - Loaded");
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private void openLog(string sFilePath)
+        private void OpenLog(string sFilePath)
         {
             IEnumerable<string> sEnumerableLines = File.ReadLines(sFilePath, Encoding.UTF8);
 
             string sDirectoryPath = Path.GetFullPath(sFilePath);
 
-            inter.MainTextBox.Clear(); // 현 텍스트 UI 초기화
+            m_LogViewerPresenter.MainTextBox.Clear(); // 현 텍스트 UI 초기화
             m_sListLines.Clear(); // 현 로그들 초기화
 
             // 가져온 파일의 로그들 할당
@@ -85,19 +85,19 @@ namespace WinformExample
             }
 
             // 로그들을 필터링
-            List<string> sListFilteredLines = filterStringList(m_sListLines);
+            List<string> sListFilteredLines = FilterStringList(m_sListLines);
             // 필터된 로그들을 UI에 표현
             foreach (string sLine in sListFilteredLines)
             {
-                inter.MainTextBox.Text += sLine + "\n";
+                m_LogViewerPresenter.MainTextBox.Text += sLine + "\n";
             }
             m_sFullPath = sDirectoryPath;
-            inter.PathOfFileSystemWatcher = m_sFullPath.Substring(0, sDirectoryPath.LastIndexOf('\\')); // 파일의 이름 제외한 디렉터리 경로만 가져오기
-            inter.FileTitleLabel = Path.GetFileNameWithoutExtension(m_sFullPath); // 제목(파일 이름) 표시
+            m_LogViewerPresenter.PathOfFileSystemWatcher = m_sFullPath.Substring(0, sDirectoryPath.LastIndexOf('\\')); // 파일의 이름 제외한 디렉터리 경로만 가져오기
+            m_LogViewerPresenter.FileTitleLabel = Path.GetFileNameWithoutExtension(m_sFullPath); // 제목(파일 이름) 표시
         }
 
         // fileSystemWatcher가 해당 파일이 발견됬는지 확인
-        private void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
+        private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
             try
             {
@@ -123,12 +123,12 @@ namespace WinformExample
                             m_sListLines.Add(arrLine);
                         }
                         // 추가할 로그를 필터링
-                        List<string> sListAddFiltedLines = filterStringList(sListLines);
+                        List<string> sListAddFiltedLines = FilterStringList(sListLines);
 
                         // 추가할 필터된 로그들을 표현
                         foreach (string sNewLine in sListAddFiltedLines)
                         {
-                            inter.MainTextBox.AppendText(sNewLine + "\n");
+                            m_LogViewerPresenter.MainTextBox.AppendText(sNewLine + "\n");
                         }
                     }
                 }
@@ -139,7 +139,7 @@ namespace WinformExample
             }
         }
 
-        private void btnOpenFile_Click(object sender, EventArgs e)
+        private void BtnOpenFile_Click(object sender, EventArgs e)
         {
             try
             {
@@ -152,7 +152,7 @@ namespace WinformExample
                 {
                     cLogger.Instance.AddLog(eLogType.SYSTEM, $"LogViewer - File Opened. Path : {dl.FileName}");
 
-                    openLog(dl.FileName);
+                    OpenLog(dl.FileName);
                 }
                 else
                 {
@@ -161,88 +161,93 @@ namespace WinformExample
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private void initializeWithFilter()
+        private void InitializeWithFilter()
         {
-            List<string> listFiltered = filterStringList(m_sListLines);
+            List<string> listFiltered = FilterStringList(m_sListLines);
 
-            inter.MainTextBox.Clear();
+            // inter.MainTextBox.Clear();
+            m_LogViewerPresenter.MainTextBox.SuspendLayout();
+
+            StringBuilder sb = new StringBuilder(1024 * 1024);
+
             foreach (string sLine in listFiltered)
             {
-                inter.MainTextBox.Text += sLine + "\n";
+                sb.AppendLine(sLine);
+                // inter.MainTextBox.Text += sLine + "\n";
             }
+
+            m_LogViewerPresenter.MainTextBox.Text = sb.ToString();
+
+            m_LogViewerPresenter.MainTextBox.ResumeLayout();
         }
 
-        private void btnAddFilter_Click(object sender, EventArgs e)
+        private void BtnAddFilter_Click(object sender, EventArgs e)
         {
             try
             {
-                if (!string.IsNullOrEmpty(inter.InputTextToAddFilter))
+                if (!string.IsNullOrEmpty(m_LogViewerPresenter.InputTextToAddFilter))
                 {
-                    inter.FiltersItemsOfListView.Add(inter.InputTextToAddFilter);
-                    inter.ClearInputTextToAddFilter();
+                    m_LogViewerPresenter.FiltersItemsOfListView.Add(m_LogViewerPresenter.InputTextToAddFilter);
+                    m_LogViewerPresenter.ClearInputTextToAddFilter();
 
-                    initializeWithFilter();
+                    InitializeWithFilter();
                 }
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private void btnDeleteFilter_Click(object sender, EventArgs e)
+        private void BtnDeleteFilter_Click(object sender, EventArgs e)
         {
             try
             {
-                ListView.SelectedListViewItemCollection selectedItems = inter.lvFiltersSelectedItems;
+                ListView.SelectedListViewItemCollection selectedItems = m_LogViewerPresenter.lvFiltersSelectedItems;
                 foreach (ListViewItem item in selectedItems)
                 {
-                    inter.FiltersItemsOfListView.Remove(item);
+                    m_LogViewerPresenter.FiltersItemsOfListView.Remove(item);
                 }
-                initializeWithFilter();
+                InitializeWithFilter();
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
         // 필터 함수 - 걸러진 목록을 리턴값으로
-        private List<string> filterStringList(List<string> sList)
+        private List<string> FilterStringList(List<string> sList)
         {
-            List<string> sListFilters = new List<string>();
-            List<string> sListResult = new List<string>();
-            ListView.ListViewItemCollection items = inter.FiltersItemsOfListView;
+            HashSet<string> listFilters = new HashSet<string>();
+            List<string> listResult = new List<string>();
 
-            // 필터 단어를 리스트로부터 가져옴
-            foreach (ListViewItem item in items)
+            foreach (ListViewItem perItem in m_LogViewerPresenter.FiltersItemsOfListView)
             {
-                sListFilters.Add(item.Text);
+                listFilters.Add(perItem.Text);
             }
-
-            // 리스트로부터 로그를 가져옴
-            foreach (string perLine in sList)
+            foreach(string sLine in sList)
             {
-                // 필터 단어를 포함 안해야지만 통과할 수 있다
-                bool isNotContain = true;
-                foreach (string sFilterLine in sListFilters)
+                bool bPass = true;
+
+                foreach(string filter in listFilters)
                 {
-                    if (perLine.Contains(sFilterLine))
+                    if(sLine.Contains(filter))
                     {
-                        isNotContain = false;
+                        bPass = false;
+                        break;
                     }
                 }
-                if (isNotContain)
-                {
-                    sListResult.Add(perLine);
-                }
+
+                if (bPass)
+                    listResult.Add(sLine);
             }
-            // 걸러진 리스트 반환
-            return sListResult;
+
+            return listResult;
         }
 
     }

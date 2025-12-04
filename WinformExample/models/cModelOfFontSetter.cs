@@ -11,25 +11,25 @@ namespace WinformExample
 {
     public class cModelOfFontSetter
     {
-        private iFontSettterPresenter inter;
+        private iFontSettterPresenter m_FontSetterPresenter;
         // 트리 뷰에 노드로 할당할 랜덤 아이디.
         private readonly Random randomNodeID;
 
         public cModelOfFontSetter(iFontSettterPresenter presenter)
         {
-            inter = presenter;
+            m_FontSetterPresenter = presenter;
             randomNodeID = new Random();
 
-            inter.initializeLoad += loadInitialize;
-            inter.boldCheck__CheckedChanged += boldCheck_CheckedChanged;
-            inter.btnAddChildClick += btnAddChild_Click;
-            inter.btnAddRootClick += btnAddRoot_Click;
-            inter.btnDeleteNodeClick += btnDeleteNode_Click;
-            inter.btnModalClick += btnModal_Click;
-            inter.btnModalessClick += btnModaless_Click;
-            inter.italicCheck__CheckedChanged += italicCheck_CheckedChanged;
-            inter.selectedFontChanged += selectFontCombo;
-            inter.tkBarTestScroll += tkBarTest_Scroll;
+            m_FontSetterPresenter.initializeLoad += LoadInitialize;
+            m_FontSetterPresenter.boldCheck__CheckedChanged += BoldCheck_CheckedChanged;
+            m_FontSetterPresenter.btnAddChildClick += BtnAddChild_Click;
+            m_FontSetterPresenter.btnAddRootClick += BtnAddRoot_Click;
+            m_FontSetterPresenter.btnDeleteNodeClick += BtnDeleteNode_Click;
+            m_FontSetterPresenter.btnModalClick += BtnModal_Click;
+            m_FontSetterPresenter.btnModalessClick += BtnModaless_Click;
+            m_FontSetterPresenter.italicCheck__CheckedChanged += ItalicCheck_CheckedChanged;
+            m_FontSetterPresenter.selectedFontChanged += SelectFontCombo;
+            m_FontSetterPresenter.tkBarTestScroll += TkBarTest_Scroll;
         }
 
         public void SaveData(string sPathToSave)
@@ -39,15 +39,15 @@ namespace WinformExample
                 Stream stream = new FileStream(sPathToSave, FileMode.OpenOrCreate);
                 using (BinaryWriter writer = new BinaryWriter(stream))
                 {
-                    writer.Write(inter.TextFontComboSelected);
-                    writer.Write(inter.CheckedBold);
-                    writer.Write(inter.CheckedItalic);
-                    writer.Write(inter.TextBoxFontTest);
-                    writer.Write(inter.ValueTkbar);
-                    writer.Write(inter.CountAllNodes);
-                    foreach (TreeNode node in inter.TreeNodes_All)
+                    writer.Write(m_FontSetterPresenter.TextFontComboSelected);
+                    writer.Write(m_FontSetterPresenter.CheckedBold);
+                    writer.Write(m_FontSetterPresenter.CheckedItalic);
+                    writer.Write(m_FontSetterPresenter.TextBoxFontTest);
+                    writer.Write(m_FontSetterPresenter.ValueTkbar);
+                    writer.Write(m_FontSetterPresenter.CountAllNodes);
+                    foreach (TreeNode node in m_FontSetterPresenter.TreeNodes_All)
                     {
-                        saveNodeFromTree(writer, node, null);
+                        SaveNodeFromTree(writer, node, null);
                     }
                 }
 
@@ -55,7 +55,7 @@ namespace WinformExample
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
         public void LoadData(string sPathToLoad)
@@ -67,28 +67,28 @@ namespace WinformExample
                 {
                     string sFontText = reader.ReadString();
                     SetFontIndexFromString(sFontText);
-                    inter.CheckedBold = reader.ReadBoolean();
-                    inter.CheckedItalic = reader.ReadBoolean();
-                    inter.TextBoxFontTest = reader.ReadString();
-                    inter.ValueTkbar = reader.ReadInt32();
+                    m_FontSetterPresenter.CheckedBold = reader.ReadBoolean();
+                    m_FontSetterPresenter.CheckedItalic = reader.ReadBoolean();
+                    m_FontSetterPresenter.TextBoxFontTest = reader.ReadString();
+                    m_FontSetterPresenter.ValueTkbar = reader.ReadInt32();
                     int nNodeCount = reader.ReadInt32();
                     // TreeNode 불러오기
                     for(int i = 0; i < nNodeCount; i++)
                     {
-                        loadNode(reader);
+                        LoadNode(reader);
                     }
-                    sendToListFromTree();
-                    tkBarTest_Scroll(null, null);
+                    SendToListFromTree();
+                    TkBarTest_Scroll(null, null);
                 }
 
                 cLogger.Instance.AddLog(eLogType.SYSTEM, $"FontSetter - Loaded");
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
-        private void saveNodeFromTree(BinaryWriter writer, TreeNode node, TreeNode father)
+        private void SaveNodeFromTree(BinaryWriter writer, TreeNode node, TreeNode father)
         {
             writer.Write(node.Text);
             string sFather;
@@ -103,21 +103,21 @@ namespace WinformExample
             writer.Write(sFather);
             foreach (TreeNode child in node.Nodes)
             {
-                saveNodeFromTree(writer, child, node);
+                SaveNodeFromTree(writer, child, node);
             }
         }
-        private void loadNode(BinaryReader reader)
+        private void LoadNode(BinaryReader reader)
         {
             string sNodeText = reader.ReadString();
             string sFather = reader.ReadString();
             if (sFather == "null")
             {
-                inter.AddTncTreeNode(sNodeText);
-                sendToListFromTree();
+                m_FontSetterPresenter.AddTncTreeNode(sNodeText);
+                SendToListFromTree();
             }
             else
             {
-                TreeNode tnFatherNode = inter.GetTreeNodeByString(sFather);
+                TreeNode tnFatherNode = m_FontSetterPresenter.GetTreeNodeByString(sFather);
                 if (tnFatherNode != null)
                 {
                     tnFatherNode.Nodes.Add(sNodeText, sNodeText);
@@ -131,34 +131,34 @@ namespace WinformExample
             FontFamily[] arrFonts = FontFamily.Families;
             foreach (FontFamily font in arrFonts)
             {
-                inter.AddComboItem(font.Name);
+                m_FontSetterPresenter.AddComboItem(font.Name);
 
                 if (sText == font.Name)
                 {
-                    inter.IndexFontComboSelected = index;
+                    m_FontSetterPresenter.IndexFontComboSelected = index;
                 }
                 index++;
             }
         }
 
         // 초기화 로드
-        private void loadInitialize(object sender, EventArgs e)
+        private void LoadInitialize(object sender, EventArgs e)
         {
             try
             {
                 string currentFontName = "";
                 
-                currentFontName = inter.TextFontCurrentName;
+                currentFontName = m_FontSetterPresenter.TextFontCurrentName;
 
                 int index = 0;
                 FontFamily[] arrFonts = FontFamily.Families;
                 foreach (FontFamily font in arrFonts)
                 {
-                    inter.AddComboItem(font.Name);
+                    m_FontSetterPresenter.AddComboItem(font.Name);
 
                     if (currentFontName == font.Name)
                     {
-                        inter.IndexFontComboSelected = index;
+                        m_FontSetterPresenter.IndexFontComboSelected = index;
                     }
                     index++;
                 }
@@ -167,198 +167,182 @@ namespace WinformExample
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
         // 볼드체 체크
-        private void boldCheck_CheckedChanged(object sender, EventArgs e)
+        private void BoldCheck_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
-                FontStyle fontStyle = inter.FontCurrent.Style;
-                string sFontName = inter.FontCurrent.SystemFontName;
+                FontStyle fontStyle = m_FontSetterPresenter.FontCurrent.Style;
+                string sFontName = m_FontSetterPresenter.FontCurrent.SystemFontName;
 
-                if (inter.CheckedBold)
-                {
-                    // 볼드체 할당
-                    fontStyle |= FontStyle.Bold;
-                }
-                else
-                {
-                    // 볼드체 빼기
-                    fontStyle ^= FontStyle.Bold;
-                }
+                // 볼드체 빼기/더하기
+                fontStyle ^= FontStyle.Bold;
+                
                 // 만약 폰트 선택박스에서 선택된게 있으면
-                if (inter.IndexFontComboSelected >= 0)
+                if (m_FontSetterPresenter.IndexFontComboSelected >= 0)
                 {
                     // 폰트타입 할당
-                    sFontName = inter.TextFontComboSelected;// (string)cbxFontCombo.SelectedItem;
+                    sFontName = m_FontSetterPresenter.TextFontComboSelected;// (string)cbxFontCombo.SelectedItem;
                 }
 
-                inter.FontCurrent = new Font(sFontName, 8, fontStyle);
+                m_FontSetterPresenter.FontCurrent = new Font(sFontName, 8, fontStyle);
 
-                cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Bold Checked {inter.CheckedBold}");
+                cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Bold Checked {m_FontSetterPresenter.CheckedBold}");
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
         // 이탤릭체 체크
-        private void italicCheck_CheckedChanged(object sender, EventArgs e)
+        private void ItalicCheck_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
-                FontStyle fontStyle = inter.FontCurrent.Style;
-                string sFontName = inter.FontCurrent.SystemFontName;
+                FontStyle fontStyle = m_FontSetterPresenter.FontCurrent.Style;
+                string sFontName = m_FontSetterPresenter.FontCurrent.SystemFontName;
+                
+                // 이탤릭 빼기/더하기
+                fontStyle ^= FontStyle.Italic;
 
-                if (inter.CheckedItalic)
+                if (m_FontSetterPresenter.IndexFontComboSelected >= 0)
                 {
-                    // 이탤릭 할당
-                    fontStyle |= FontStyle.Italic;
-                }
-                else
-                {
-                    // 이탤릭 빼기
-                    fontStyle ^= FontStyle.Italic;
+                    sFontName = m_FontSetterPresenter.TextFontComboSelected;
                 }
 
+                m_FontSetterPresenter.FontCurrent = new Font(sFontName, m_FontSetterPresenter.FontCurrent.SizeInPoints, fontStyle);
 
-                if (inter.IndexFontComboSelected >= 0)
-                {
-                    sFontName = inter.TextFontComboSelected;
-                }
-
-                inter.FontCurrent = new Font(sFontName, inter.FontCurrent.SizeInPoints, fontStyle);
-
-                cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Italic Checked {inter.CheckedItalic}");
+                cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Italic Checked {m_FontSetterPresenter.CheckedItalic}");
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private void sendToListFromTree()
+        private void SendToListFromTree()
         {
-            inter.ClearLvNode();
-            foreach (TreeNode node in inter.TreeNodes_All)
-                sendToListFromTree(node);
+            m_FontSetterPresenter.ClearLvNode();
+            foreach (TreeNode node in m_FontSetterPresenter.TreeNodes_All)
+                SendToListFromTree(node);
         }
 
-        private void sendToListFromTree(TreeNode Node)
+        private void SendToListFromTree(TreeNode Node)
         {
             string sMiddleStr = " - depth : ";
-            inter.AddLvNode(Node.Text + sMiddleStr + Node.FullPath.Count(f => f == '\\').ToString());
+            m_FontSetterPresenter.AddLvNode(Node.Text + sMiddleStr + Node.FullPath.Count(f => f == '\\').ToString());
 
             foreach (TreeNode node in Node.Nodes)
             {
-                sendToListFromTree(node);
+                SendToListFromTree(node);
             }
         }
 
-        private void btnAddRoot_Click(object sender, EventArgs e)
+        private void BtnAddRoot_Click(object sender, EventArgs e)
         {
             try
             {
                 string sNewNode = randomNodeID.Next().ToString();
-                inter.AddTncTreeNode(sNewNode);
-                sendToListFromTree();
+                m_FontSetterPresenter.AddTncTreeNode(sNewNode);
+                SendToListFromTree();
 
                 cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Root Node Added : {sNewNode}");
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
-        private void btnAddChild_Click(object sender, EventArgs e)
+        private void BtnAddChild_Click(object sender, EventArgs e)
         {
             try
             {
-                if (inter.TreeNodeSelected == null)
+                if (m_FontSetterPresenter.TreeNodeSelected == null)
                 {
                     MessageBox.Show("노드를 선택하세요.", "TreeView Test", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
                 string sNewNode = randomNodeID.Next().ToString();
-                inter.TreeNodeSelected.Nodes.Add(sNewNode);
-                inter.TreeNodeSelected.Expand();
-                sendToListFromTree();
+                m_FontSetterPresenter.TreeNodeSelected.Nodes.Add(sNewNode);
+                m_FontSetterPresenter.TreeNodeSelected.Expand();
+                SendToListFromTree();
 
-                cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Child Node Added : {sNewNode}, Parent : {inter.TreeNodeSelected.Text}");
+                cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Child Node Added : {sNewNode}, Parent : {m_FontSetterPresenter.TreeNodeSelected.Text}");
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private void sendLogWithDeletingNodes(TreeNode node)
+        private void SendLogWithDeletingNodes(TreeNode node)
         {
             foreach(TreeNode childNode in node.Nodes)
             {
-                sendLogWithDeletingNodes(childNode);
+                SendLogWithDeletingNodes(childNode);
             }
 
             cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Tree Node <{node.Text}> deleted");
         }
 
-        private void btnDeleteNode_Click(object sender, EventArgs e)
+        private void BtnDeleteNode_Click(object sender, EventArgs e)
         {
             try
             {
-                if(inter.TreeNodeSelected == null)
+                if(m_FontSetterPresenter.TreeNodeSelected == null)
                 {
                     MessageBox.Show("노드를 선택하세요.", "TreeView Test", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-                sendLogWithDeletingNodes(inter.TreeNodeSelected);
-                inter.TreeNodes_All.Remove(inter.TreeNodeSelected);
-                sendToListFromTree();
+                SendLogWithDeletingNodes(m_FontSetterPresenter.TreeNodeSelected);
+                m_FontSetterPresenter.TreeNodes_All.Remove(m_FontSetterPresenter.TreeNodeSelected);
+                SendToListFromTree();
             }
             catch(Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private void selectFontCombo(object sender, EventArgs e)
+        private void SelectFontCombo(object sender, EventArgs e)
         {
             try
             {
-                if (inter.IndexFontComboSelected < 0)
+                if (m_FontSetterPresenter.IndexFontComboSelected < 0)
                 {
                     return;
                 }
 
-                inter.FontCurrent = new Font(inter.TextFontComboSelected, 8, inter.FontCurrent.Style);
+                m_FontSetterPresenter.FontCurrent = new Font(m_FontSetterPresenter.TextFontComboSelected, 8, m_FontSetterPresenter.FontCurrent.Style);
 
-                cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Font Selected : {inter.TextFontComboSelected}");
+                cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - Font Selected : {m_FontSetterPresenter.TextFontComboSelected}");
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private void tkBarTest_Scroll(object sender, EventArgs e)
+        private void TkBarTest_Scroll(object sender, EventArgs e)
         {
             try
             {
-                inter.ValuePgbar = (int)((double)inter.ValueTkbar / inter.MaxValueTkbar * inter.MaxValuePgbar);
+                m_FontSetterPresenter.ValuePgbar = (int)((double)m_FontSetterPresenter.ValueTkbar / m_FontSetterPresenter.MaxValueTkbar * m_FontSetterPresenter.MaxValuePgbar);
 
-                cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - TrackBar Scrolled : {inter.ValueTkbar}, ProgressBar Value : {inter.ValuePgbar}");
+                cLogger.Instance.AddLog(eLogType.USER_ACTION, $"FontSetter - TrackBar Scrolled : {m_FontSetterPresenter.ValueTkbar}, ProgressBar Value : {m_FontSetterPresenter.ValuePgbar}");
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private void btnModal_Click(object sender, EventArgs e)
+        private void BtnModal_Click(object sender, EventArgs e)
         {
             try
             {
@@ -373,11 +357,11 @@ namespace WinformExample
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private void btnModaless_Click(object sender, EventArgs e)
+        private void BtnModaless_Click(object sender, EventArgs e)
         {
             try
             {
@@ -392,7 +376,7 @@ namespace WinformExample
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
     }

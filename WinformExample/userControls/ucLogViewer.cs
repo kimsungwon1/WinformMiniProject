@@ -16,12 +16,11 @@ namespace WinformExample
         public ucLogViewer()
         {
             InitializeComponent();
-            eventInitialize();
-            model = new cModelOfLogViewer(this);
-
-
+            EventInitialize();
+            m_modelOfLogViewer = new cModelOfLogViewer(this);
         }
-        private void eventInitialize()
+
+        private void EventInitialize()
         {
             this.btnOpenFile.Click += new System.EventHandler(this.btnOpenFile_Click);
             this.tbMain.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbMain_KeyPress);
@@ -32,7 +31,7 @@ namespace WinformExample
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
         }
 
-        private cModelOfLogViewer model;
+        private cModelOfLogViewer m_modelOfLogViewer;
 
         public event FileSystemEventHandler fileSystemWatcherChanged;
         public event EventHandler btnOpenFileClick;
@@ -150,11 +149,11 @@ namespace WinformExample
         }
         public void SaveData(string sPathToSave)
         {
-            model.SaveData(sPathToSave);
+            m_modelOfLogViewer.SaveData(sPathToSave);
         }
         public void LoadData(string sPathToLoad)
         {
-            model.LoadData(sPathToLoad);
+            m_modelOfLogViewer.LoadData(sPathToLoad);
         }
 
         private void btnSave_Click(object sender, EventArgs e)

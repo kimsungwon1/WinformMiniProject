@@ -15,14 +15,14 @@ namespace WinformExample
         [DllImport("CppDLL.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl, EntryPoint = "?GetGaussianBluredImage@@YAXPEAE0HHH@Z")]
         public static extern void GetGaussianBluredImage(byte[] byteArrOriginal, byte[] byteArrOutput, int nHeight, int nWidth, int nMemLen);
 
-        private iImageLoadPresenter inter;
+        private iImageLoadPresenter m_ImageLoadPresenter;
         public cModelOfImageLoader(iImageLoadPresenter presenter)
         {
-            inter = presenter;
-            inter.btnImageLoadClick += btnImageLoad_Click;
+            m_ImageLoadPresenter = presenter;
+            m_ImageLoadPresenter.btnImageLoadClick += BtnImageLoad_Click;
         }
 
-        private void btnImageLoad_Click(object sender, EventArgs e)
+        private void BtnImageLoad_Click(object sender, EventArgs e)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace WinformExample
 
                 Image imageFiltered;
 
-                inter.ImageOriginal = imageRead;
+                m_ImageLoadPresenter.ImageOriginal = imageRead;
 
                 Bitmap bmp = (Bitmap)imageRead;
                 Bitmap newBmp;
@@ -66,13 +66,13 @@ namespace WinformExample
 
                 imageFiltered = newBmp;
 
-                inter.ImageFiltered = imageFiltered;
+                m_ImageLoadPresenter.ImageFiltered = imageFiltered;
 
                 cLogger.Instance.AddLog(eLogType.USER_ACTION, $"ImageLoader - Button Clicked : Image {dlg.FileName}");
             }
             catch(Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 

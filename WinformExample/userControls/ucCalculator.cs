@@ -12,7 +12,7 @@ namespace WinformExample
 {
     public partial class ucCalculator : UserControl, iCalculatorPresenter
     {
-        private cModelOfCalculator model;
+        private cModelOfCalculator m_modelOfCalculator;
 
         public event EventHandler btnClick_MainOperation;
         public event KeyPressEventHandler keyPress_MainOperation;
@@ -20,11 +20,11 @@ namespace WinformExample
         public ucCalculator()
         {
             InitializeComponent();
-            eventInitialize();
-            model = new cModelOfCalculator(this);
+            EventInitialize();
+            m_modelOfCalculator = new cModelOfCalculator(this);
         }
 
-        private void eventInitialize()
+        private void EventInitialize()
         {
             this.btnPoint.Click += this.btnCalBtn_Click;
             this.btnPoint.Enter += this.btn_Enter;
@@ -70,11 +70,11 @@ namespace WinformExample
         }
         public void SaveData(string sPathToSave)
         {
-            model.SaveData(sPathToSave);
+            m_modelOfCalculator.SaveData(sPathToSave);
         }
         public void LoadData(string sPathToLoad)
         {
-            model.LoadData(sPathToLoad);
+            m_modelOfCalculator.LoadData(sPathToLoad);
         }
         public string TextMainOperation
         {

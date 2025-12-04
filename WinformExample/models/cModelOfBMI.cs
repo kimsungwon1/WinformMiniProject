@@ -9,13 +9,13 @@ namespace WinformExample
 {
     public class cModelOfBMI
     {
-        private iBMIPresenter inter;
+        private iBMIPresenter m_BMIPresenter;
         private double m_dBmi = 0.0;
 
         public cModelOfBMI(iBMIPresenter presenter)
         {
-            inter = presenter;
-            inter.btnCalculateClick += calculate;
+            m_BMIPresenter = presenter;
+            m_BMIPresenter.btnCalculateClick += calculate;
         }
         public void SaveData(string sPathToSave)
         {
@@ -26,8 +26,8 @@ namespace WinformExample
                 {
                     int nHeight = 0;
                     int nWeight = 0;
-                    int.TryParse(inter.TextTbHeight, out nHeight);
-                    int.TryParse(inter.TextTbWeight, out nWeight);
+                    int.TryParse(m_BMIPresenter.TextTbHeight, out nHeight);
+                    int.TryParse(m_BMIPresenter.TextTbWeight, out nWeight);
                     writer.Write(nHeight);
                     writer.Write(nWeight);
                     writer.Write(m_dBmi);
@@ -36,7 +36,7 @@ namespace WinformExample
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
         public void LoadData(string sPathToSave)
@@ -50,19 +50,19 @@ namespace WinformExample
                     nHeight = reader.ReadInt32();
                     nWeight = reader.ReadInt32();
                     m_dBmi = reader.ReadDouble();
-                    inter.TextTbHeight = nHeight.ToString();
-                    inter.TextTbWeight = nWeight.ToString();
-                    inter.TextLbResult = m_dBmi.ToString();
-                    calculateResult();
+                    m_BMIPresenter.TextTbHeight = nHeight.ToString();
+                    m_BMIPresenter.TextTbWeight = nWeight.ToString();
+                    m_BMIPresenter.TextLbResult = m_dBmi.ToString();
+                    CalculateResult();
                     cLogger.Instance.AddLog(eLogType.SYSTEM, "BMI - Loaded");
                 }
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
-        private void calculateResult()
+        private void CalculateResult()
         {
             // barValue : m_bmiTrackBar의 값            
             string sWeightType;
@@ -70,26 +70,26 @@ namespace WinformExample
             {
                 if (m_dBmi <= 16)
                 {
-                    inter.ValueBmiTkbar = 0;
+                    m_BMIPresenter.ValueBmiTkbar = 0;
                 }
                 else if (m_dBmi <= 16.8)
                 {
-                    inter.ValueBmiTkbar = 1;
+                    m_BMIPresenter.ValueBmiTkbar = 1;
                 }
                 else
                 {
-                    inter.ValueBmiTkbar = 2;
+                    m_BMIPresenter.ValueBmiTkbar = 2;
                 }
                 sWeightType = "저체중";
             }
             else if (m_dBmi < 23.0)
             {
-                inter.ValueBmiTkbar = (int)((m_dBmi - 18.5) / 0.9) + 2;
+                m_BMIPresenter.ValueBmiTkbar = (int)((m_dBmi - 18.5) / 0.9) + 2;
                 sWeightType = "정상";
             }
             else if (m_dBmi < 25.0)
             {
-                inter.ValueBmiTkbar = (int)((m_dBmi - 23.0) / 0.9) + 6;
+                m_BMIPresenter.ValueBmiTkbar = (int)((m_dBmi - 23.0) / 0.9) + 6;
                 sWeightType = "과체중";
             }
             else
@@ -99,11 +99,11 @@ namespace WinformExample
                 {
                     nValue = 10;
                 }
-                inter.ValueBmiTkbar = nValue;
+                m_BMIPresenter.ValueBmiTkbar = nValue;
                 sWeightType = "비만";
             }
 
-            inter.TextLbResult = $" - BMI 지수 [{m_dBmi}]로 {sWeightType}입니다.";
+            m_BMIPresenter.TextLbResult = $" - BMI 지수 [{m_dBmi}]로 {sWeightType}입니다.";
             cLogger.Instance.AddLog(eLogType.INFO, $"BMI - BMI : {m_dBmi}, {sWeightType}");
         }
         // 계산
@@ -114,17 +114,15 @@ namespace WinformExample
                 // bmi = 몸무게(kg) / 키(m) / 키(m)
                 // heightText의 단위는 cm이므로 100을 두번 나누어야함
                 double dHeight = 0; double dWeight = 0;
-                double.TryParse(inter.TextTbHeight, out dHeight);
-                double.TryParse(inter.TextTbWeight, out dWeight);
+                double.TryParse(m_BMIPresenter.TextTbHeight, out dHeight);
+                double.TryParse(m_BMIPresenter.TextTbWeight, out dWeight);
 
                 double dDivide = dHeight * dHeight / 10000;
                 m_dBmi = dWeight / dDivide;
-
-                calculateResult();
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
     }

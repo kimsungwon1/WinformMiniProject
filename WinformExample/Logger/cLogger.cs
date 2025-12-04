@@ -62,9 +62,9 @@ namespace WinformExample
             }
         }
 
-        public void AddLog(eLogType eType, string sMessage)
+        public void AddLog(eLogType eType, Exception exception)
         {
-            string sNewMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | {eType.ToString()} | {sMessage}";
+            string sNewMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | {eType.ToString()} | {exception.Message} | StackTrace : {exception.StackTrace}";
             try
             {
                 using (StreamWriter sw = new StreamWriter(m_sLogPath, true))
@@ -72,11 +72,27 @@ namespace WinformExample
                     sw.WriteLine(sNewMessage);
                 }
             }
-            catch (IOException exception)
+            catch (IOException e)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(e.Message + $"\n StackTrace : {e.StackTrace}");
             }
             
+        }
+
+        public void AddLog(eLogType eType, string message)
+        {
+            string sNewMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | {eType.ToString()} | {message}";
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(m_sLogPath, true))
+                {
+                    sw.WriteLine(sNewMessage);
+                }
+            }
+            catch (IOException e)
+            {
+                MessageBox.Show(e.Message + $"\n StackTrace : {e.StackTrace}");
+            }
         }
     }
 }

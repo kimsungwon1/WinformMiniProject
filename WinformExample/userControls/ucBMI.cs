@@ -12,17 +12,17 @@ namespace WinformExample
 {
     public partial class ucBMI : UserControl, iBMIPresenter
     {
-        private cModelOfBMI model;
+        private cModelOfBMI m_modelOfBMI;
 
         public event EventHandler btnCalculateClick;
         public ucBMI()
         {
             InitializeComponent();
-            initializeEvents();
-            model = new cModelOfBMI(this);
+            EventInitialize();
+            m_modelOfBMI = new cModelOfBMI(this);
         }
 
-        private void initializeEvents()
+        private void EventInitialize()
         {
             this.btnCalculateBMI.Click += new System.EventHandler(this.btnCalculateBMI_Click);
             this.tbHeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbHeight_KeyPress);
@@ -89,11 +89,11 @@ namespace WinformExample
 
         public void SaveData(string sPathToSave)
         {
-            model.SaveData(sPathToSave);
+            m_modelOfBMI.SaveData(sPathToSave);
         }
         public void LoadData(string sPathToLoad)
         {
-            model.LoadData(sPathToLoad);
+            m_modelOfBMI.LoadData(sPathToLoad);
         }
 
         private void tbHeight_KeyPress(object sender, KeyPressEventArgs e)

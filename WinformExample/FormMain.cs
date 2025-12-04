@@ -21,27 +21,26 @@ namespace WinformExample
     }
     public partial class FormMain : Form
     {
-        private Dictionary<eTabType, iPresenter> dicTabs;
+        private Dictionary<eTabType, iPresenter> m_dicTabs;
 
         public FormMain()
         {
             InitializeComponent();
             
-            dicTabs = new Dictionary<eTabType, iPresenter>();
+            m_dicTabs = new Dictionary<eTabType, iPresenter>();
 
-            initializeControls();
-            initializeEvents();
+            InitializeControls();
+            EventInitialize();
         }
 
-        private void initializeEvents()
+        private void EventInitialize()
         {
             this.tcMainTab.SelectedIndexChanged += new System.EventHandler(this.tcMainTab_SelectedIndexChanged);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMain_FormClosed);
             this.Load += new System.EventHandler(this.FormMain_Load);
         }
 
-        private iPresenter getTab(eTabType eType)
+        private iPresenter GetTab(eTabType eType)
         {
             switch(eType)
             {
@@ -59,17 +58,36 @@ namespace WinformExample
                     return null;
             }
         }
+        private TabPage GetTabPage(eTabType eType)
+        {
+            switch (eType)
+            {
+                case eTabType.BMI:
+                    return tpBMI;
+                case eTabType.Calculator:
+                    return tpCalculator;
+                case eTabType.FontSetter:
+                    return tpFontSetter;
+                case eTabType.ImageLoad:
+                    return tpImageLoader;
+                case eTabType.LogViewer:
+                    return tpLogViewer;
+                default:
+                    return null;
+            }
+        }
 
-        private void initializeControls()
+        private void InitializeControls()
         {
             foreach(eTabType eType in Enum.GetValues(typeof(eTabType)))
             {
-                iPresenter iTab = getTab(eType);
-                dicTabs.Add(eType, iTab);
+                iPresenter iTab = GetTab(eType);
+                m_dicTabs.Add(eType, iTab);
 
                 Control control = iTab as Control;
-                
-                tcMainTab.TabPages[(int)eType].Controls.Add(control);
+                TabPage tp = GetTabPage(eType);
+
+                tp.Controls.Add(control);
 
                 control.Anchor = AnchorStyles.None;
                 control.Dock = DockStyle.Fill;
@@ -80,11 +98,11 @@ namespace WinformExample
         {
             try
             {
-                tcMainTab.TabPages[tcMainTab.SelectedIndex].Controls[0].Focus();
+                tcMainTab.SelectedTab.Controls[0].Focus();
             }
             catch(Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
@@ -97,10 +115,16 @@ namespace WinformExample
                     string sType = reader.ReadLine();
 
                     eTabType eCurrentTab;
-                    Enum.TryParse(sType, out eCurrentTab);
-                    tcMainTab.SelectedIndex = (int)eCurrentTab;
+                    if(Enum.TryParse(sType, out eCurrentTab))
+                    {
+                        tcMainTab.SelectedIndex = (int)eCurrentTab;
+                    }
+                    else
+                    {
+                        tcMainTab.SelectedIndex = 0;
+                    }
 
-                    foreach (KeyValuePair<eTabType, iPresenter> vKeyValue in dicTabs)
+                    foreach (KeyValuePair<eTabType, iPresenter> vKeyValue in m_dicTabs)
                     {
                         eTabType eType = vKeyValue.Key;
                         iPresenter presenter = vKeyValue.Value;
@@ -110,11 +134,11 @@ namespace WinformExample
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private void saveWhenClosing()
+        private void SaveWhenClosed()
         {
             try
             {
@@ -122,7 +146,7 @@ namespace WinformExample
                 {
                     writer.Write(((eTabType)tcMainTab.SelectedIndex).ToString());
 
-                    foreach (KeyValuePair<eTabType, iPresenter> vKeyValue in dicTabs)
+                    foreach (KeyValuePair<eTabType, iPresenter> vKeyValue in m_dicTabs)
                     {
                         eTabType eType = vKeyValue.Key;
                         iPresenter presenter = vKeyValue.Value;
@@ -132,18 +156,13 @@ namespace WinformExample
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
         private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            saveWhenClosing();
-        }
-
-        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            saveWhenClosing();
+            SaveWhenClosed();
         }
     }
 }

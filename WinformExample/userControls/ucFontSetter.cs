@@ -16,16 +16,16 @@ namespace WinformExample
         public ucFontSetter()
         {
             InitializeComponent();
-            eventInitialize();
+            EventInitialize();
 
             ColumnHeader header = new ColumnHeader();
             header.Width = lvNodes.ClientSize.Width - SystemInformation.VerticalScrollBarWidth;
             lvNodes.Columns.Add(header);
 
-            model = new cModelOfFontSetter(this);
+            m_ModelOfFontSetter = new cModelOfFontSetter(this);
         }
 
-        private void eventInitialize()
+        private void EventInitialize()
         {
             this.btnAddChild.Click += new System.EventHandler(this.btnAddChild_Click);
             this.btnAddRoot.Click += new System.EventHandler(this.btnAddRoot_Click);
@@ -37,11 +37,11 @@ namespace WinformExample
             this.cbItalicCheck.CheckedChanged += new System.EventHandler(this.italicCheck_CheckedChanged);
             this.cbBoldCheck.CheckedChanged += new System.EventHandler(this.boldCheck_CheckedChanged);
             this.cbxFontCombo.SelectedIndexChanged += new System.EventHandler(this.cbxFontCombo_SelectedIndexChanged);
-            this.Load += new System.EventHandler(this.load);
+            this.Load += new System.EventHandler(this.Load_Initialize);
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
         }
 
-        private cModelOfFontSetter model;
+        private cModelOfFontSetter m_ModelOfFontSetter;
 
         public event EventHandler initializeLoad;
         public event EventHandler boldCheck__CheckedChanged;
@@ -209,7 +209,7 @@ namespace WinformExample
             lvNodes.Clear();
         }
         // 초기화 로드
-        private void load(object sender, EventArgs e)
+        private void Load_Initialize(object sender, EventArgs e)
         {
             if(initializeLoad == null)
             {
@@ -259,7 +259,6 @@ namespace WinformExample
             if (btnAddChildClick == null)
             {
                 cLogger.Instance.AddLog(eLogType.ERROR, "FontSetter - Child Node Add Button Event is null");
-                throw new NullReferenceException("FontSetter - Child Node Add Button Event is null");
             }
 
             btnAddChildClick(sender, e);
@@ -316,11 +315,11 @@ namespace WinformExample
         }
         public void SaveData(string sPathToSave)
         {
-            model.SaveData(sPathToSave);
+            m_ModelOfFontSetter.SaveData(sPathToSave);
         }
         public void LoadData(string sPathToLoad)
         {
-            model.LoadData(sPathToLoad);
+            m_ModelOfFontSetter.LoadData(sPathToLoad);
         }
 
         private void btnDeleteNode_Click(object sender, EventArgs e)

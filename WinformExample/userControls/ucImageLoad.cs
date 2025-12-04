@@ -19,15 +19,15 @@ namespace WinformExample
         public ucImageLoad()
         {
             InitializeComponent();
-            eventInitialize();
-            model = new cModelOfImageLoader(this);
+            EventInitialize();
+            m_modelOfImageLoader = new cModelOfImageLoader(this);
         }
-        private void eventInitialize()
+        private void EventInitialize()
         {
             this.btnImageLoad.Click += new System.EventHandler(this.btnImageLoad_Click);
         }
 
-        private cModelOfImageLoader model;
+        private cModelOfImageLoader m_modelOfImageLoader;
 
         public event EventHandler btnImageLoadClick;
         public Image ImageOriginal
@@ -57,11 +57,11 @@ namespace WinformExample
         }
         public void SaveData(string sPathToSave)
         {
-            model.SaveData(sPathToSave);
+            m_modelOfImageLoader.SaveData(sPathToSave);
         }
         public void LoadData(string sPathToLoad)
         {
-            model.LoadData(sPathToLoad);
+            m_modelOfImageLoader.LoadData(sPathToLoad);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace WinformExample
 {
     public class cModelOfCalculator
     {
-        private iCalculatorPresenter inter;
+        private iCalculatorPresenter m_CalculatorPresenter;
         private eCalculatorState m_eCalculatorState { get; set; }
         private eOperatorType m_eOperatorType { get; set; }
         private double m_dFirstOperand { get; set; }
@@ -37,9 +37,9 @@ namespace WinformExample
             m_eCalculatorState = eCalculatorState.FirstDigitTyping;
             m_dFirstOperand = 0.0;
             m_dSecondOperand = 0.0;
-            this.inter = inter;
-            inter.btnClick_MainOperation += btnClick;
-            inter.keyPress_MainOperation += keyPress;
+            this.m_CalculatorPresenter = inter;
+            inter.btnClick_MainOperation += ClickBtn;
+            inter.keyPress_MainOperation += KeyPress;
             inter.SetFocusToControl();
         }
 
@@ -54,13 +54,13 @@ namespace WinformExample
                     writer.Write((int)m_eOperatorType);
                     writer.Write(m_dFirstOperand);
                     writer.Write(m_dSecondOperand);
-                    writer.Write(inter.TextMainOperation);
+                    writer.Write(m_CalculatorPresenter.TextMainOperation);
                 }
                 cLogger.Instance.AddLog(eLogType.SYSTEM, $"Calculator - Saved");
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
         public void LoadData(string sPathToSave)
@@ -74,41 +74,41 @@ namespace WinformExample
                     m_eOperatorType = (eOperatorType)reader.ReadInt32();
                     m_dFirstOperand = reader.ReadDouble();
                     m_dSecondOperand = reader.ReadDouble();
-                    inter.TextMainOperation = reader.ReadString();
+                    m_CalculatorPresenter.TextMainOperation = reader.ReadString();
                 }
                 cLogger.Instance.AddLog(eLogType.SYSTEM, $"Calculator - Loaded");
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private void btnClick(object sender, EventArgs e)
+        private void ClickBtn(object sender, EventArgs e)
         {
             try
             {
                 Button btnSender = (Button)sender;
 
-                int pastSelectionStart = inter.SelectionStart_TextMain;
-                int pastSelectionLength = inter.SelectionLength_TextMain;
+                int pastSelectionStart = m_CalculatorPresenter.SelectionStart_TextMain;
+                int pastSelectionLength = m_CalculatorPresenter.SelectionLength_TextMain;
 
                 if (pastSelectionLength > 0)
                 {
-                    string sNewText = inter.TextMainOperation;
+                    string sNewText = m_CalculatorPresenter.TextMainOperation;
                     sNewText = sNewText.Remove(pastSelectionStart, pastSelectionLength);
-                    inter.TextMainOperation = sNewText;
+                    m_CalculatorPresenter.TextMainOperation = sNewText;
                 }
                 if (btnSender != null)
                 {
-                    bool isTyped = input(btnSender.Text);
-                    inter.SetFocusToControl();
+                    bool isTyped = Input(btnSender.Text);
+                    m_CalculatorPresenter.SetFocusToControl();
 
                     if (isTyped)
                     {
                         // 커서가 있다면
-                        string sNewText = inter.TextMainOperation;
-                        inter.TextMainOperation = sNewText + btnSender.Text;
+                        string sNewText = m_CalculatorPresenter.TextMainOperation;
+                        m_CalculatorPresenter.TextMainOperation = sNewText + btnSender.Text;
                     }
                 }
 
@@ -116,37 +116,37 @@ namespace WinformExample
             }
             catch(Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private void keyPress(object sender, KeyPressEventArgs e)
+        private void KeyPress(object sender, KeyPressEventArgs e)
         {
             try
             {
                 string sKey = new string(e.KeyChar, 1);
-                bool isTyped = input(sKey);
+                bool isTyped = Input(sKey);
                 if (isTyped)
                 {
-                    inter.TextMainOperation = inter.TextMainOperation += sKey;
+                    m_CalculatorPresenter.TextMainOperation = m_CalculatorPresenter.TextMainOperation += sKey;
                 }
 
                 cLogger.Instance.AddLog(eLogType.USER_ACTION, $"Calculator - Key Pressed : {e.KeyChar}");
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
         }
 
-        private bool input(string sTyped)
+        private bool Input(string sTyped)
         {
             try
             {
                 int nDigit;
 
-                if (!(char.IsDigit(sTyped[0]) || isCalculator(sTyped[0]) || sTyped == "=" || sTyped == "C" || sTyped == "<X" || sTyped == "\r" ||
-                    (sTyped[0] == '.' && isInsertingPointPossible())) && sTyped[0] != '\b')
+                if (!(char.IsDigit(sTyped[0]) || IsCalculator(sTyped[0]) || sTyped == "=" || sTyped == "C" || sTyped == "<X" || sTyped == "\r" ||
+                    (sTyped[0] == '.' && IsInsertingPointPossible())) && sTyped[0] != '\b')
                 {
                     return false;
                 }
@@ -156,17 +156,17 @@ namespace WinformExample
                     if (m_eCalculatorState == eCalculatorState.CalculatorTyped)
                     {
                         m_eCalculatorState = eCalculatorState.SecondDigitTyping;
-                        inter.TextMainOperation = "";
+                        m_CalculatorPresenter.TextMainOperation = "";
                     }
                     if (sTyped == ".")
                     {
-                        if (!isInsertingPointPossible())
+                        if (!IsInsertingPointPossible())
                         {
                             return false;
                         }
-                        if (string.IsNullOrEmpty(inter.TextMainOperation))
+                        if (string.IsNullOrEmpty(m_CalculatorPresenter.TextMainOperation))
                         {
-                            inter.TextMainOperation += "0.";
+                            m_CalculatorPresenter.TextMainOperation += "0.";
                             return false;
                         }
                     }
@@ -176,7 +176,7 @@ namespace WinformExample
                     // Clear
                     if (sTyped == "C")
                     {
-                        inter.TextMainOperation = "";
+                        m_CalculatorPresenter.TextMainOperation = "";
 
                         if (m_eCalculatorState == eCalculatorState.SecondDigitTyping)
                         {
@@ -185,17 +185,17 @@ namespace WinformExample
                         else if (m_eCalculatorState == eCalculatorState.CalculatorTyped)
                         {
                             m_eCalculatorState = eCalculatorState.FirstDigitTyping;
-                            inter.TextMainOperation = m_dFirstOperand.ToString();
+                            m_CalculatorPresenter.TextMainOperation = m_dFirstOperand.ToString();
                         }
                         return false;
                     }
                     // 한낱말 지우기
                     else if (sTyped == "<X" || sTyped == "\b")
                     {
-                        string newText = inter.TextMainOperation;
+                        string newText = m_CalculatorPresenter.TextMainOperation;
                         if (!string.IsNullOrEmpty(newText))
                         {
-                            inter.TextMainOperation = newText.Remove(newText.Length - 1);
+                            m_CalculatorPresenter.TextMainOperation = newText.Remove(newText.Length - 1);
                         }
 
                         return false;
@@ -213,13 +213,13 @@ namespace WinformExample
                                 SetOperandFromText(true);
                             }
                             m_dSecondOperand = 0.0;
-                            calculate();
+                            Calculate();
                         }
                         else
                         {
                             // 두번째 피연산자 가져온 뒤 연산
                             SetOperandFromText(false);
-                            calculate();
+                            Calculate();
                         }
                         return false;
                     }
@@ -231,7 +231,7 @@ namespace WinformExample
                         {
                             m_eCalculatorState = eCalculatorState.CalculatorTyped;
                             // 텍스트박스에 아무것도 없다면 0을 가져온다.
-                            if (inter.TextMainOperation == "")
+                            if (m_CalculatorPresenter.TextMainOperation == "")
                             {
                                 m_dFirstOperand = 0.0;
                             }
@@ -245,14 +245,14 @@ namespace WinformExample
                         else if (m_eCalculatorState == eCalculatorState.SecondDigitTyping)
                         {
                             eOperatorType pastCalculatorType = m_eOperatorType;
-                            calculate();
+                            Calculate();
                             SetOperandFromText(true);
                             m_eOperatorType = pastCalculatorType;
                             m_eCalculatorState = eCalculatorState.SecondDigitTyping;
                         }
 
                         // 연산자 타입 정함
-                        setCalculatorType(sTyped);
+                        SetCalculatorType(sTyped);
 
                         return false;
                     }
@@ -260,19 +260,19 @@ namespace WinformExample
             }
             catch (Exception exception)
             {
-                cLogger.Instance.AddLog(eLogType.ERROR, exception.Message);
+                cLogger.Instance.AddLog(eLogType.ERROR, exception);
             }
             return true;
         }
 
-        private bool isCalculator(char key)
+        private bool IsCalculator(char key)
         {
             return key == '*' || key == '-' || key == '+' || key == '%' || key == '/';
         }
 
-        private bool isInsertingPointPossible()
+        private bool IsInsertingPointPossible()
         {
-            string sCurrentText = inter.TextMainOperation;
+            string sCurrentText = m_CalculatorPresenter.TextMainOperation;
             if (sCurrentText.Contains('.'))
                 return false;
             return true;
@@ -280,7 +280,7 @@ namespace WinformExample
 
 
         // 만약 연산자를 입력했으면 연산자 타입을 정하고 연산자를 텍스트에 출력
-        private void setCalculatorType(string sTyped)
+        private void SetCalculatorType(string sTyped)
         {
             if (sTyped == "%")
             {
@@ -303,11 +303,11 @@ namespace WinformExample
                 m_eOperatorType = eOperatorType.Plus;
             }
 
-            inter.TextMainOperation = sTyped;
+            m_CalculatorPresenter.TextMainOperation = sTyped;
         }
 
         // 등호 호출 시 계산하는 함수
-        private void calculate()
+        private void Calculate()
         {
             double dNewOperand = 0.0;
             switch (m_eOperatorType)
@@ -328,7 +328,7 @@ namespace WinformExample
                     dNewOperand = m_dFirstOperand + m_dSecondOperand;
                     break;
             }
-            inter.TextMainOperation = dNewOperand.ToString();
+            m_CalculatorPresenter.TextMainOperation = dNewOperand.ToString();
 
             // 첫 연산자 입력 상태로 되돌아가기
             m_eCalculatorState = eCalculatorState.FirstDigitTyping;
@@ -340,7 +340,7 @@ namespace WinformExample
         public void SetOperandFromText(bool isFirstOperand)
         {
             double dOut;
-            if (double.TryParse(inter.TextMainOperation, out dOut))
+            if (double.TryParse(m_CalculatorPresenter.TextMainOperation, out dOut))
             {
                 if (isFirstOperand)
                 {
