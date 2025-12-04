@@ -1,3 +1,6 @@
 *.lock
 .vs/
 *.log
+*.exe
+*.csproj
+*.csproj.user
